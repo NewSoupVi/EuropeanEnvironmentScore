@@ -11,7 +11,7 @@
       </div>
       <div class="map-container">
         <EnvironmentMap @coordinates-changed="updateCoordinates" />
-        <button class="analyze-button" @click="navigateToAnalyze" :disabled="!coordinates.lat || !coordinates.lng">
+        <button class="button-primary" @click="navigateToAnalyze" :disabled="!coordinates.lat || !coordinates.lng">
           {{ $t("home.analyzeButton") }}
         </button>
       </div>
@@ -125,29 +125,5 @@ main {
   max-width: 90vw;
   display: flex;
   flex-direction: column;
-}
-
-.analyze-button {
-  width: 100%;
-  padding: 1rem 2rem;
-  background-color: rgb(58, 75, 105);
-  color: #e2e8f0;
-  border: none;
-  border-radius: 0 0 8px 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  flex-shrink: 0;
-}
-
-.analyze-button:hover:not(:disabled) {
-  background-color: rgb(90, 117, 173);
-}
-
-.analyze-button:disabled {
-  background-color: #4a5568;
-  cursor: not-allowed;
-  opacity: 0.6;
 }
 </style>
