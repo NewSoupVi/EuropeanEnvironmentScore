@@ -1,88 +1,86 @@
 <template>
   <div id="analyze-page">
     <header>
-      <h1>{{ $t('analyze.title') }}</h1>
+      <h1>{{ $t("analyze.title") }}</h1>
       <div class="header-controls">
         <LanguageSwitcher />
-        <button @click="goBack" class="back-button">{{ $t('analyze.backButton') }}</button>
+        <button @click="goBack" class="back-button">{{ $t("analyze.backButton") }}</button>
       </div>
     </header>
-    
+
     <main>
       <div v-if="isValid" class="coordinates-display">
-        <h2>{{ $t('analyze.selectedLocation') }}</h2>
+        <h2>{{ $t("analyze.selectedLocation") }}</h2>
         <div class="coordinate-item">
-          <span class="label">{{ $t('analyze.latitude') }}</span>
+          <span class="label">{{ $t("analyze.latitude") }}</span>
           <span class="value">{{ latitude }}</span>
         </div>
         <div class="coordinate-item">
-          <span class="label">{{ $t('analyze.longitude') }}</span>
+          <span class="label">{{ $t("analyze.longitude") }}</span>
           <span class="value">{{ longitude }}</span>
         </div>
       </div>
-      
+
       <div v-else class="error-message">
-        <h2>{{ $t('analyze.invalidCoordinates') }}</h2>
-        <p>{{ $t('analyze.invalidMessage') }}</p>
-        <p>{{ $t('analyze.latitudeRange') }}</p>
-        <p>{{ $t('analyze.longitudeRange') }}</p>
-        <button @click="goBack" class="back-button">{{ $t('analyze.backButton') }}</button>
+        <h2>{{ $t("analyze.invalidCoordinates") }}</h2>
+        <p>{{ $t("analyze.invalidMessage") }}</p>
+        <p>{{ $t("analyze.latitudeRange") }}</p>
+        <p>{{ $t("analyze.longitudeRange") }}</p>
+        <button @click="goBack" class="back-button">{{ $t("analyze.backButton") }}</button>
       </div>
     </main>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import LanguageSwitcher from "../components/LanguageSwitcher.vue";
 
 export default {
-  name: 'AnalyzePage',
+  name: "AnalyzePage",
   components: {
-    LanguageSwitcher
+    LanguageSwitcher,
   },
   setup() {
-    const router = useRouter()
-    const route = useRoute()
-    const latitude = ref(null)
-    const longitude = ref(null)
-    const isValid = ref(false)
+    const router = useRouter();
+    const route = useRoute();
+    const latitude = ref(null);
+    const longitude = ref(null);
+    const isValid = ref(false);
 
     const validateCoordinates = (lat, lng) => {
-      const latNum = parseFloat(lat)
-      const lngNum = parseFloat(lng)
-      
-      return !isNaN(latNum) && !isNaN(lngNum) && 
-             latNum >= -90 && latNum <= 90 && 
-             lngNum >= -180 && lngNum <= 180
-    }
+      const latNum = parseFloat(lat);
+      const lngNum = parseFloat(lng);
+
+      return !isNaN(latNum) && !isNaN(lngNum) && latNum >= -90 && latNum <= 90 && lngNum >= -180 && lngNum <= 180;
+    };
 
     const goBack = () => {
-      router.push('/')
-    }
+      router.push("/");
+    };
 
     onMounted(() => {
-      const lat = route.query.lat
-      const lng = route.query.lng
-      
+      const lat = route.query.lat;
+      const lng = route.query.lng;
+
       if (lat && lng && validateCoordinates(lat, lng)) {
-        latitude.value = parseFloat(lat).toFixed(6)
-        longitude.value = parseFloat(lng).toFixed(6)
-        isValid.value = true
+        latitude.value = parseFloat(lat).toFixed(6);
+        longitude.value = parseFloat(lng).toFixed(6);
+        isValid.value = true;
       } else {
-        isValid.value = false
+        isValid.value = false;
       }
-    })
+    });
 
     return {
       latitude,
       longitude,
       isValid,
-      goBack
-    }
-  }
-}
+      goBack,
+    };
+  },
+};
 </script>
 
 <style scoped>

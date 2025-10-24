@@ -1,47 +1,35 @@
 <template>
   <div class="language-switcher">
-    <button 
-      @click="switchLanguage('en')" 
-      :class="{ active: currentLocale === 'en' }"
-      class="lang-button"
-    >
-      EN
-    </button>
-    <button 
-      @click="switchLanguage('de')" 
-      :class="{ active: currentLocale === 'de' }"
-      class="lang-button"
-    >
-      DE
-    </button>
+    <button @click="switchLanguage('en')" :class="{ active: currentLocale === 'en' }" class="lang-button">EN</button>
+    <button @click="switchLanguage('de')" :class="{ active: currentLocale === 'de' }" class="lang-button">DE</button>
   </div>
 </template>
 
 <script>
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
 export default {
-  name: 'LanguageSwitcher',
+  name: "LanguageSwitcher",
   setup() {
-    const { locale } = useI18n()
-    
-    const currentLocale = computed(() => locale.value)
-    
+    const { locale } = useI18n();
+
+    const currentLocale = computed(() => locale.value);
+
     const switchLanguage = (lang) => {
-      locale.value = lang
+      locale.value = lang;
       // Store preference in localStorage (only in browser)
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('preferred-language', lang)
+      if (typeof window !== "undefined") {
+        localStorage.setItem("preferred-language", lang);
       }
-    }
-    
+    };
+
     return {
       currentLocale,
-      switchLanguage
-    }
-  }
-}
+      switchLanguage,
+    };
+  },
+};
 </script>
 
 <style scoped>

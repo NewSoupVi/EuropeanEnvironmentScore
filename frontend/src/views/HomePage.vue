@@ -1,22 +1,18 @@
 <template>
   <div id="home-page">
     <header>
-      <h1>{{ $t('app.title') }}</h1>
+      <h1>{{ $t("app.title") }}</h1>
       <LanguageSwitcher />
     </header>
-    
+
     <main>
       <div class="instruction">
-        <p>{{ $t('home.instruction') }}</p>
+        <p>{{ $t("home.instruction") }}</p>
       </div>
       <div class="map-container">
         <EnvironmentMap @coordinates-changed="updateCoordinates" />
-        <button 
-          class="analyze-button" 
-          @click="navigateToAnalyze"
-          :disabled="!coordinates.lat || !coordinates.lng"
-        >
-          {{ $t('home.analyzeButton') }}
+        <button class="analyze-button" @click="navigateToAnalyze" :disabled="!coordinates.lat || !coordinates.lng">
+          {{ $t("home.analyzeButton") }}
         </button>
       </div>
     </main>
@@ -24,44 +20,44 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import EnvironmentMap from '../components/EnvironmentMap.vue'
-import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import EnvironmentMap from "../components/EnvironmentMap.vue";
+import LanguageSwitcher from "../components/LanguageSwitcher.vue";
 
 export default {
-  name: 'HomePage',
+  name: "HomePage",
   components: {
     EnvironmentMap,
-    LanguageSwitcher
+    LanguageSwitcher,
   },
   setup() {
-    const router = useRouter()
-    const coordinates = ref({ lat: 52.5208339, lng: 13.4089248 }) // Default to Berlin TV Tower
+    const router = useRouter();
+    const coordinates = ref({ lat: 52.5208339, lng: 13.4089248 }); // Default to Berlin TV Tower
 
     const updateCoordinates = (lat, lng) => {
-      coordinates.value = { lat, lng }
-    }
+      coordinates.value = { lat, lng };
+    };
 
     const navigateToAnalyze = () => {
       if (coordinates.value.lat && coordinates.value.lng) {
         router.push({
-          path: '/analyze',
+          path: "/analyze",
           query: {
             lat: coordinates.value.lat,
-            lng: coordinates.value.lng
-          }
-        })
+            lng: coordinates.value.lng,
+          },
+        });
       }
-    }
+    };
 
     return {
       coordinates,
       updateCoordinates,
-      navigateToAnalyze
-    }
-  }
-}
+      navigateToAnalyze,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -71,7 +67,8 @@ export default {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   overflow: hidden;
 }
