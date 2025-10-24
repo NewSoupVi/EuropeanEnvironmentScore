@@ -1,12 +1,13 @@
 <template>
   <div id="home-page">
     <header>
-      <h1>Environment Score</h1>
+      <h1>{{ $t('app.title') }}</h1>
+      <LanguageSwitcher />
     </header>
     
     <main>
       <div class="instruction">
-        <p>Choose a location to analyze!</p>
+        <p>{{ $t('home.instruction') }}</p>
       </div>
       <div class="map-container">
         <EnvironmentMap @coordinates-changed="updateCoordinates" />
@@ -15,7 +16,7 @@
           @click="navigateToAnalyze"
           :disabled="!coordinates.lat || !coordinates.lng"
         >
-          Analyze this location
+          {{ $t('home.analyzeButton') }}
         </button>
       </div>
     </main>
@@ -26,11 +27,13 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EnvironmentMap from '../components/EnvironmentMap.vue'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 export default {
   name: 'HomePage',
   components: {
-    EnvironmentMap
+    EnvironmentMap,
+    LanguageSwitcher
   },
   setup() {
     const router = useRouter()
@@ -89,6 +92,9 @@ header {
   padding: 1rem 2rem;
   border-bottom: 1px solid #4a5568;
   flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 header h1 {

@@ -1,29 +1,32 @@
 <template>
   <div id="analyze-page">
     <header>
-      <h1>Environment Score - Analysis</h1>
-      <button @click="goBack" class="back-button">← Back to Map</button>
+      <h1>{{ $t('analyze.title') }}</h1>
+      <div class="header-controls">
+        <LanguageSwitcher />
+        <button @click="goBack" class="back-button">{{ $t('analyze.backButton') }}</button>
+      </div>
     </header>
     
     <main>
       <div v-if="isValid" class="coordinates-display">
-        <h2>Selected Location</h2>
+        <h2>{{ $t('analyze.selectedLocation') }}</h2>
         <div class="coordinate-item">
-          <span class="label">Latitude:</span>
+          <span class="label">{{ $t('analyze.latitude') }}</span>
           <span class="value">{{ latitude }}</span>
         </div>
         <div class="coordinate-item">
-          <span class="label">Longitude:</span>
+          <span class="label">{{ $t('analyze.longitude') }}</span>
           <span class="value">{{ longitude }}</span>
         </div>
       </div>
       
       <div v-else class="error-message">
-        <h2>Invalid Coordinates</h2>
-        <p>The provided coordinates are not valid.</p>
-        <p>Latitude must be between -90 and 90.</p>
-        <p>Longitude must be between -180 and 180.</p>
-        <button @click="goBack" class="back-button">← Back to Map</button>
+        <h2>{{ $t('analyze.invalidCoordinates') }}</h2>
+        <p>{{ $t('analyze.invalidMessage') }}</p>
+        <p>{{ $t('analyze.latitudeRange') }}</p>
+        <p>{{ $t('analyze.longitudeRange') }}</p>
+        <button @click="goBack" class="back-button">{{ $t('analyze.backButton') }}</button>
       </div>
     </main>
   </div>
@@ -32,9 +35,13 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 export default {
   name: 'AnalyzePage',
+  components: {
+    LanguageSwitcher
+  },
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -97,6 +104,12 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 header h1 {

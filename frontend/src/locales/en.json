@@ -1,0 +1,24 @@
+{
+  "app": {
+    "title": "Environment Score",
+    "subtitle": "European Environment Score"
+  },
+  "home": {
+    "instruction": "Choose a location to analyze!",
+    "analyzeButton": "Analyze this location"
+  },
+  "analyze": {
+    "title": "Environment Score - Analysis",
+    "backButton": "← Back to Map",
+    "selectedLocation": "Selected Location",
+    "latitude": "Latitude:",
+    "longitude": "Longitude:",
+    "invalidCoordinates": "Invalid Coordinates",
+    "invalidMessage": "The provided coordinates are not valid.",
+    "latitudeRange": "Latitude must be between -90 and 90.",
+    "longitudeRange": "Longitude must be between -180 and 180."
+  },
+  "map": {
+    "berlinTower": "Berlin TV Tower"
+  }
+}

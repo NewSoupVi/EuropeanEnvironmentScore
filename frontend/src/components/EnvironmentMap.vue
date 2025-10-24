@@ -3,16 +3,19 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import L from 'leaflet'
 
 export default {
   name: 'EnvironmentMap',
   emits: ['coordinates-changed'],
   setup(props, { emit }) {
+    const { t, locale } = useI18n()
     const mapContainer = ref(null)
     let map = null
     let marker = null
+    let isInitialMarker = true // Track if we're still showing the initial Berlin TV Tower marker
 
     onMounted(() => {
       if (mapContainer.value) {
@@ -26,7 +29,7 @@ export default {
 
         // Create initial marker at Berlin TV Tower
         marker = L.marker([52.5208339, 13.4089248]).addTo(map)
-        marker.bindPopup('Berlin TV Tower').openPopup()
+        marker.bindPopup(t('map.berlinTower')).openPopup()
         
         // Emit initial coordinates
         emit('coordinates-changed', 52.5208339, 13.4089248)
@@ -38,9 +41,21 @@ export default {
           // Move existing marker to new position
           marker.setLatLng([lat, lng])
           
+          // Remove popup when user selects their own location
+          marker.unbindPopup()
+          isInitialMarker = false
+          
           // Emit new coordinates
           emit('coordinates-changed', lat, lng)
         })
+      }
+    })
+
+    // Watch for language changes and update popup if still showing initial marker
+    watch(locale, () => {
+      if (marker && isInitialMarker) {
+        // Update the popup text with the new translation
+        marker.bindPopup(t('map.berlinTower')).openPopup()
       }
     })
 

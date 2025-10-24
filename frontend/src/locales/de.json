@@ -1,0 +1,24 @@
+{
+  "app": {
+    "title": "Umwelt-Score",
+    "subtitle": "Europäischer Umwelt-Score"
+  },
+  "home": {
+    "instruction": "Wählen Sie einen Standort zur Analyse!",
+    "analyzeButton": "Diesen Standort analysieren"
+  },
+  "analyze": {
+    "title": "Umwelt-Score - Analyse",
+    "backButton": "← Zurück zur Karte",
+    "selectedLocation": "Ausgewählter Standort",
+    "latitude": "Breitengrad:",
+    "longitude": "Längengrad:",
+    "invalidCoordinates": "Ungültige Koordinaten",
+    "invalidMessage": "Die angegebenen Koordinaten sind nicht gültig.",
+    "latitudeRange": "Der Breitengrad muss zwischen -90 und 90 liegen.",
+    "longitudeRange": "Der Längengrad muss zwischen -180 und 180 liegen."
+  },
+  "map": {
+    "berlinTower": "Berliner Fernsehturm"
+  }
+}

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import HomePage from './views/HomePage.vue'
 import AnalyzePage from './views/AnalyzePage.vue'
+import i18n from './i18n.js'
 import './style.css'
 
 const routes = [
@@ -15,4 +16,4 @@ const router = createRouter({
   routes
 })
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(i18n).mount('#app')
