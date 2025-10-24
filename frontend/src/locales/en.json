@@ -7,6 +7,9 @@
     "instruction": "Choose a location to analyze!",
     "analyzeButton": "Analyze this location"
   },
+  "geocode": {
+    "search": "Search ..."
+  },
   "analyze": {
     "title": "Environment Score - Analysis",
     "backButton": "← Back to Map",

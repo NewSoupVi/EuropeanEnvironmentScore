@@ -10,6 +10,7 @@
         <p>{{ $t("home.instruction") }}</p>
       </div>
       <div class="map-container">
+        <GeocodingInput />
         <EnvironmentMap @coordinates-changed="updateCoordinates" />
         <button
           class="button-primary radius-bottom"
@@ -26,12 +27,14 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import GeocodingInput from "../components/GeocodingInput.vue";
 import EnvironmentMap from "../components/EnvironmentMap.vue";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
 
 export default {
   name: "HomePage",
   components: {
+    GeocodingInput,
     EnvironmentMap,
     LanguageSwitcher,
   },

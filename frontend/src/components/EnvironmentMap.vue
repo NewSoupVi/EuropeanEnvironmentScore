@@ -76,7 +76,6 @@ export default {
 #map {
   width: 100%;
   height: 100%;
-  border-radius: 8px 8px 0 0;
   cursor: pointer;
   flex: 1;
 }

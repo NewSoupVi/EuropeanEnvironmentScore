@@ -7,6 +7,9 @@
     "instruction": "Wählen Sie einen Standort zur Analyse!",
     "analyzeButton": "Diesen Standort analysieren"
   },
+  "geocode": {
+    "search": "Suche ..."
+  },
   "analyze": {
     "title": "Umwelt-Score - Analyse",
     "backButton": "← Zurück zur Karte",
