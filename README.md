@@ -1,6 +1,6 @@
-# Environment Score Application
+# European Environment Score
 
-A full-stack application with Spring Boot backend and Vue.js frontend.
+A simple GIS Web Application (Written in Spring Boot & Vue.js)
 
 ## Project Structure
 
