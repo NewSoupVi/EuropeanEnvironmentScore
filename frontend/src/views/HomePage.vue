@@ -11,7 +11,11 @@
       </div>
       <div class="map-container">
         <EnvironmentMap @coordinates-changed="updateCoordinates" />
-        <button class="button-primary" @click="navigateToAnalyze" :disabled="!coordinates.lat || !coordinates.lng">
+        <button
+          class="button-primary radius-bottom"
+          @click="navigateToAnalyze"
+          :disabled="!coordinates.lat || !coordinates.lng"
+        >
           {{ $t("home.analyzeButton") }}
         </button>
       </div>
@@ -125,5 +129,9 @@ main {
   max-width: 90vw;
   display: flex;
   flex-direction: column;
+}
+
+.radius-bottom {
+  border-radius: 0 0 8px 8px;
 }
 </style>
