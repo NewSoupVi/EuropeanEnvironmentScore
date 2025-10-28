@@ -1,22 +1,9 @@
 # European Environment Score
 
-A simple GIS Web Application (Written in Spring Boot & Vue.js)
+A GIS Web Application (Written in Spring Boot & Vue.js)
+that scores a location of your choice for various environmental metrics.
 
-## Project Structure
-
-```
-Environment Score/
-├── src/main/java/          # Spring Boot backend
-├── frontend/               # Vue.js frontend
-│   ├── src/
-│   │   ├── App.vue        # Main Vue component
-│   │   ├── main.js        # Vue app entry point
-│   │   └── style.css      # Global styles
-│   └── index.html         # HTML template
-├── package.json           # Node.js dependencies
-├── vite.config.js         # Vite build configuration
-└── pom.xml               # Maven dependencies
-```
+Only works in Europe.
 
 ## Getting Started
 
@@ -47,26 +34,6 @@ Environment Score/
    ./mvnw spring-boot:run
    ```
    This will start the backend on http://localhost:8080
-
-### Available Scripts
-
-- `npm run dev` - Start Vue.js development server with hot reload
-- `npm run build` - Build Vue.js app for production (outputs to Spring Boot static folder)
-- `npm run preview` - Preview production build
-
-### API Endpoints
-
-- `GET /api/score` - Get current environment score
-- `GET /api/locations` - Get location data with scores
-
-### Features
-
-- **Vue.js 3** with Composition API
-- **Vite** for fast development and building
-- **Leaflet** for interactive maps
-- **Spring Boot** REST API
-- **CORS** configured for development
-- **Responsive design** with CSS Grid
 
 ### Production Build
 
