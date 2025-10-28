@@ -14,8 +14,8 @@
         <EnvironmentMap @coordinates-changed="updateCoordinates" />
         <button
           class="button-primary radius-bottom"
-          @click="navigateToAnalyze"
           :disabled="!coordinates.lat || !coordinates.lng"
+          @click="navigateToAnalyze"
         >
           {{ $t("home.analyzeButton") }}
         </button>

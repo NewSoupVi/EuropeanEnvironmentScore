@@ -1,7 +1,19 @@
 <template>
   <div class="language-switcher">
-    <button @click="switchLanguage('en')" :class="{ active: currentLocale === 'en' }" class="lang-button">EN</button>
-    <button @click="switchLanguage('de')" :class="{ active: currentLocale === 'de' }" class="lang-button">DE</button>
+    <button
+      :class="{ active: currentLocale === 'en' }"
+      class="lang-button"
+      @click="switchLanguage('en')"
+    >
+      EN
+    </button>
+    <button
+      :class="{ active: currentLocale === 'de' }"
+      class="lang-button"
+      @click="switchLanguage('de')"
+    >
+      DE
+    </button>
   </div>
 </template>
 

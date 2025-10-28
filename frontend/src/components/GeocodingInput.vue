@@ -1,14 +1,23 @@
 <template>
   <div class="geocoding-input-container">
-    <input id="geocoding-input" :placeholder="$t('geocode.search')" v-model="locationInput" type="text" />
-    <button class="submit-button button-primary" @click="searchLocation()" id="locationSearchSubmit">
+    <input
+      id="geocoding-input"
+      v-model="locationInput"
+      :placeholder="$t('geocode.search')"
+      type="text"
+    >
+    <button
+      id="locationSearchSubmit"
+      class="submit-button button-primary"
+      @click="searchLocation()"
+    >
       {{ $t("geocode.search") }}
     </button>
   </div>
 </template>
 
 <script setup>
-const locationInput = defineModel({ default: "" });
+const locationInput = defineModel<string>({ default: "" });
 const searchLocation = () => {
   console.log(locationInput.value);
 };

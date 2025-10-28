@@ -4,12 +4,20 @@
       <h1>{{ $t("analyze.title") }}</h1>
       <div class="header-controls">
         <LanguageSwitcher />
-        <button @click="goBack" class="back-button">{{ $t("analyze.backButton") }}</button>
+        <button
+          class="back-button"
+          @click="goBack"
+        >
+          {{ $t("analyze.backButton") }}
+        </button>
       </div>
     </header>
 
     <main>
-      <div v-if="isValid" class="coordinates-display">
+      <div
+        v-if="isValid"
+        class="coordinates-display"
+      >
         <h2>{{ $t("analyze.selectedLocation") }}</h2>
         <div class="coordinate-item">
           <span class="label">{{ $t("analyze.latitude") }}</span>
@@ -21,12 +29,20 @@
         </div>
       </div>
 
-      <div v-else class="error-message">
+      <div
+        v-else
+        class="error-message"
+      >
         <h2>{{ $t("analyze.invalidCoordinates") }}</h2>
         <p>{{ $t("analyze.invalidMessage") }}</p>
         <p>{{ $t("analyze.latitudeRange") }}</p>
         <p>{{ $t("analyze.longitudeRange") }}</p>
-        <button @click="goBack" class="back-button">{{ $t("analyze.backButton") }}</button>
+        <button
+          class="back-button"
+          @click="goBack"
+        >
+          {{ $t("analyze.backButton") }}
+        </button>
       </div>
     </main>
   </div>
