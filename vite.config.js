@@ -3,7 +3,13 @@ import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue({
+      script: {
+        defineModel: true,
+      },
+    }),
+  ],
   root: "frontend",
   build: {
     outDir: "../src/main/resources/static",

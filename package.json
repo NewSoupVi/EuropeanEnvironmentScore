@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
+    "test:integration": "vitest --run integration",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
@@ -25,8 +26,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.3",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.20.0",
+    "happy-dom": "^12.10.3",
     "vite": "^7.1.12",
     "vitest": "^1.0.0"
   },
