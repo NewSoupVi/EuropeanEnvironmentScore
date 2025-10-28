@@ -21,6 +21,7 @@ Environment Score/
 ## Getting Started
 
 ### Prerequisites
+
 - Java 17+
 - Node.js 16+
 - Maven 3.6+
@@ -28,14 +29,17 @@ Environment Score/
 ### Development Setup
 
 1. **Install Node.js dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Start the Vue.js development server:**
+
    ```bash
    npm run dev
    ```
+
    This will start the frontend on http://localhost:3000
 
 3. **Start the Spring Boot backend:**
@@ -69,6 +73,7 @@ Environment Score/
 To build for production:
 
 1. Build the Vue.js frontend:
+
    ```bash
    npm run build
    ```

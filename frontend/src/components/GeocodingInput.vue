@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-const locationInput = defineModel<string>({ default: "" });
+const locationInput = defineModel < string > { default: "" };
 const searchLocation = () => {
   console.log(locationInput.value);
 };

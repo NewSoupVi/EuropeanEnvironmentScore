@@ -4,9 +4,8 @@ export default [
   ...pluginVue.configs["flat/recommended"],
   {
     rules: {
-      "semi": ["error", "always"],
-      "quotes": ["error", "double"],
+      semi: ["error", "always"],
+      quotes: ["error", "double"],
     },
   },
 ];
-

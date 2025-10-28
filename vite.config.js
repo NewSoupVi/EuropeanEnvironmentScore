@@ -10,17 +10,17 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "frontend/index.html")
-      }
-    }
+        main: resolve(__dirname, "frontend/index.html"),
+      },
+    },
   },
   server: {
     port: 3000,
     proxy: {
       "/api": {
         target: "http://localhost:8080",
-        changeOrigin: true
-      }
-    }
-  }
+        changeOrigin: true,
+      },
+    },
+  },
 });

@@ -25,4 +25,3 @@ describe("validateCoordinates", () => {
     expect(validateCoordinates(undefined, undefined)).toBe(false);
   });
 });
-
