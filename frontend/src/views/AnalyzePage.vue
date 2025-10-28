@@ -36,6 +36,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
+import { validateCoordinates } from "../utils/coordinates.js";
 
 export default {
   name: "AnalyzePage",
@@ -49,13 +50,6 @@ export default {
     const longitude = ref(null);
     const isValid = ref(false);
 
-    const validateCoordinates = (lat, lng) => {
-      const latNum = parseFloat(lat);
-      const lngNum = parseFloat(lng);
-
-      return !isNaN(latNum) && !isNaN(lngNum) && latNum >= -90 && latNum <= 90 && lngNum >= -180 && lngNum <= 180;
-    };
-
     const goBack = () => {
       router.push("/");
     };
@@ -64,7 +58,7 @@ export default {
       const lat = route.query.lat;
       const lng = route.query.lng;
 
-      if (lat && lng && validateCoordinates(lat, lng)) {
+      if (validateCoordinates(lat, lng)) {
         latitude.value = parseFloat(lat).toFixed(6);
         longitude.value = parseFloat(lng).toFixed(6);
         isValid.value = true;

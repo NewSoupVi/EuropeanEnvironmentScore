@@ -1,12 +1,13 @@
 {
   "name": "environment-score",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
-    "vite": "^7.1.12"
+    "vite": "^7.1.12",
+    "vitest": "^1.0.0"
   },
   "prettier": {
     "printWidth": 120
