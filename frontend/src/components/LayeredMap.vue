@@ -52,7 +52,7 @@ onMounted(() => {
 }
 
 #explanation {
-  flex: 0.25;
+  flex: 0;
 }
 
 @media (orientation: portrait) {
