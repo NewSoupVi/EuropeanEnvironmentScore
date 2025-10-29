@@ -18,14 +18,11 @@
         v-if="isValid"
         class="coordinates-display"
       >
-        <h2>{{ $t("analyze.selectedLocation") }}</h2>
-        <div class="coordinate-item">
-          <span class="label">{{ $t("analyze.latitude") }}</span>
-          <span class="value">{{ latitude }}</span>
+        <div class="left-or-top-container">
+          <LayeredMap />
         </div>
-        <div class="coordinate-item">
-          <span class="label">{{ $t("analyze.longitude") }}</span>
-          <span class="value">{{ longitude }}</span>
+        <div class="right-or-bottom-container">
+          <AnalysisShelf />
         </div>
       </div>
 
@@ -52,12 +49,16 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
+import LayeredMap from "../components/LayeredMap.vue";
+import AnalysisShelf from "../components/AnalysisShelf.vue";
 import { validateCoordinates } from "../utils/coordinates.js";
 
 export default {
   name: "AnalyzePage",
   components: {
     LanguageSwitcher,
+    LayeredMap,
+    AnalysisShelf,
   },
   setup() {
     const router = useRouter();
@@ -143,18 +144,28 @@ header h1 {
 
 main {
   flex: 1;
-  padding: 2rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .coordinates-display {
   text-align: center;
   background-color: #2d3748;
-  padding: 2rem;
+  flex: 1;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+}
+
+@media (orientation: portrait) {
+  .coordinates-display {
+    flex-direction: column;
+  }
+}
+
+.left-or-top-container,
+.right-or-bottom-container {
+  flex: 1;
 }
 
 .coordinates-display h2 {
