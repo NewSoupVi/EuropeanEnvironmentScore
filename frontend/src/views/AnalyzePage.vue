@@ -19,7 +19,10 @@
         class="coordinates-display"
       >
         <div class="left-or-top-container">
-          <LayeredMap />
+          <LayeredMap
+            :lat="parseFloat(latitude)"
+            :lng="parseFloat(longitude)"
+          />
         </div>
         <div class="right-or-bottom-container">
           <AnalysisShelf />

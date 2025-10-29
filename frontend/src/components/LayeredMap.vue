@@ -14,13 +14,25 @@
 <script setup>
 import L from "leaflet";
 import { ref, onMounted } from "vue";
+
+const props = defineProps({
+  lat: {
+    type: Number,
+    required: true,
+  },
+  lng: {
+    type: Number,
+    required: true,
+  },
+});
+
 const mapContainer = ref(null);
 let map = null;
 
 onMounted(() => {
   if (mapContainer.value) {
     // Initialize the map
-    map = L.map(mapContainer.value).setView([52.5208339, 13.4089248], 15);
+    map = L.map(mapContainer.value).setView([props.lat, props.lng], 15);
 
     // Add the tile layer
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
