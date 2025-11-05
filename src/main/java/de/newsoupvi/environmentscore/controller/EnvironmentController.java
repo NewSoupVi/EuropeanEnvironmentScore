@@ -5,7 +5,6 @@ import de.newsoupvi.environmentscore.model.AnalysisTask;
 import de.newsoupvi.environmentscore.service.TaskService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +14,12 @@ import java.util.Map;
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class EnvironmentController {
+    private final TaskService taskService;
 
     @Autowired
-    private TaskService taskService;
+    public EnvironmentController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @PostMapping("/analysis")
     public ResponseEntity<AnalysisTask> createAnalysis(@RequestBody Map<String, Double> coords, HttpSession session) {
