@@ -1,6 +1,14 @@
 <template>
   <div class="analysis-shelf">
-    <h2>Analysis Tasks</h2>
+    <div class="header-section">
+      <h2>Analysis Tasks</h2>
+      <div
+        v-if="analysisTask && minQueuePosition > 0"
+        class="overall-queue-info"
+      >
+        <span class="queue-badge">{{ minQueuePosition }} tasks ahead in queue</span>
+      </div>
+    </div>
     <div
       v-if="!analysisTask"
       class="loading"
@@ -43,18 +51,12 @@
             class="in-progress"
           >
             <span class="spinner">⏳</span> Processing...
-            <span v-if="subtask.queuePosition > 0" class="queue-info">
-              ({{ subtask.queuePosition }} ahead)
-            </span>
           </div>
           <div
             v-else
             class="queued"
           >
             Waiting in queue...
-            <span v-if="subtask.queuePosition > 0" class="queue-info">
-              ({{ subtask.queuePosition }} tasks ahead)
-            </span>
           </div>
         </div>
       </div>
@@ -63,7 +65,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
   analysisTask: {
     type: Object,
     default: null,
@@ -84,6 +88,16 @@ const formatStatus = (status) => {
       return status;
   }
 };
+
+const minQueuePosition = computed(() => {
+  if (!props.analysisTask || !props.analysisTask.subtasks) {
+    return 0;
+  }
+
+  const positions = props.analysisTask.subtasks.map((st) => st.queuePosition || 0);
+
+  return positions.length > 0 ? Math.min(...positions) : 0;
+});
 </script>
 
 <style scoped>
@@ -92,10 +106,29 @@ const formatStatus = (status) => {
   color: #e2e8f0;
 }
 
+.header-section {
+  margin-bottom: 1.5rem;
+}
+
 .analysis-shelf h2 {
   color: #68d391;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   font-size: 1.8rem;
+}
+
+.overall-queue-info {
+  display: flex;
+  align-items: center;
+}
+
+.queue-badge {
+  background-color: #3182ce;
+  color: #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-block;
 }
 
 .loading {
@@ -187,12 +220,6 @@ const formatStatus = (status) => {
 
 .spinner {
   animation: spin 1s linear infinite;
-}
-
-.queue-info {
-  font-size: 0.875rem;
-  color: #a0aec0;
-  font-style: italic;
 }
 
 @keyframes pulse {

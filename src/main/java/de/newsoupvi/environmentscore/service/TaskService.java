@@ -79,11 +79,13 @@ public class TaskService {
     }
 
     private long calculateQueuePosition(Subtask subtask) {
-        List<SubtaskStatus> activeStatuses = Arrays.asList(SubtaskStatus.QUEUED, SubtaskStatus.QUEUED_SUBMITTED, SubtaskStatus.IN_PROGRESS);
+        List<SubtaskStatus> waitingStatuses = Arrays.asList(SubtaskStatus.QUEUED, SubtaskStatus.QUEUED_SUBMITTED);
 
-        if (!activeStatuses.contains(subtask.getStatus())) {
+        if (!waitingStatuses.contains(subtask.getStatus())) {
             return 0;
         }
+
+        List<SubtaskStatus> activeStatuses = Arrays.asList(SubtaskStatus.QUEUED, SubtaskStatus.QUEUED_SUBMITTED, SubtaskStatus.IN_PROGRESS);
 
         return subtaskRepository.countByStatusInAndCreatedAtLessThan(activeStatuses, subtask.getCreatedAt());
     }
