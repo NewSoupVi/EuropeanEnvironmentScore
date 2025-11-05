@@ -11,7 +11,8 @@
     "test:integration": "vitest --run integration",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:lint": "prettier --write . && eslint . --fix"
   },
   "keywords": [],
   "author": "",
