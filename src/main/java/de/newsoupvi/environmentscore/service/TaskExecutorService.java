@@ -28,6 +28,8 @@ public class TaskExecutorService {
         List<Subtask> queuedSubtasks = subtaskRepository.findByStatus(SubtaskStatus.QUEUED);
 
         for (Subtask subtask : queuedSubtasks) {
+            subtask.setStatus(SubtaskStatus.QUEUED_SUBMITTED);
+            subtaskRepository.save(subtask);
             executorService.submit(() -> executeSubtask(subtask.getId()));
         }
     }
@@ -43,7 +45,6 @@ public class TaskExecutorService {
             return;
         }
 
-        // Mark as in progress
         subtask.setStatus(SubtaskStatus.IN_PROGRESS);
         subtaskRepository.save(subtask);
 

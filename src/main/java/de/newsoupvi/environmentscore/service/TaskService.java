@@ -50,7 +50,7 @@ public class TaskService {
     protected void cancelQueuedTasksForSession(String sessionId) {
         analysisTaskRepository.findBySessionId(sessionId).forEach(task ->
                 task.getSubtasks().stream()
-                        .filter(subtask -> subtask.getStatus() == SubtaskStatus.QUEUED)
+                        .filter(subtask -> subtask.getStatus() == SubtaskStatus.QUEUED || subtask.getStatus() == SubtaskStatus.QUEUED_SUBMITTED)
                         .forEach(subtask -> {
                             subtask.setStatus(SubtaskStatus.CANCELED);
                             subtaskRepository.save(subtask);
@@ -79,11 +79,12 @@ public class TaskService {
     }
 
     private long calculateQueuePosition(Subtask subtask) {
-        if (subtask.getStatus() == SubtaskStatus.DONE || subtask.getStatus() == SubtaskStatus.CANCELED) {
+        List<SubtaskStatus> activeStatuses = Arrays.asList(SubtaskStatus.QUEUED, SubtaskStatus.QUEUED_SUBMITTED, SubtaskStatus.IN_PROGRESS);
+
+        if (!activeStatuses.contains(subtask.getStatus())) {
             return 0;
         }
 
-        List<SubtaskStatus> activeStatuses = Arrays.asList(SubtaskStatus.QUEUED, SubtaskStatus.IN_PROGRESS);
         return subtaskRepository.countByStatusInAndCreatedAtLessThan(activeStatuses, subtask.getCreatedAt());
     }
 }
