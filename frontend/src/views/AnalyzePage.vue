@@ -25,7 +25,7 @@
           />
         </div>
         <div class="right-or-bottom-container">
-          <AnalysisShelf />
+          <AnalysisShelf :analysis-task="analysisTask" />
         </div>
       </div>
 
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
 import LayeredMap from "../components/LayeredMap.vue";
@@ -69,9 +69,52 @@ export default {
     const latitude = ref(null);
     const longitude = ref(null);
     const isValid = ref(false);
+    const analysisTask = ref(null);
+    let pollInterval = null;
 
     const goBack = () => {
       router.push("/");
+    };
+
+    const createAnalysis = async (lat, lng) => {
+      try {
+        const response = await fetch("http://localhost:8080/api/analysis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ lat, lng }),
+        });
+        const task = await response.json();
+        analysisTask.value = task;
+        startPolling(task.id);
+      } catch (error) {
+        console.error("Error creating analysis:", error);
+      }
+    };
+
+    const pollAnalysisStatus = async (taskId) => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/analysis/${taskId}`, {
+          credentials: "include",
+        });
+        const task = await response.json();
+        analysisTask.value = task;
+
+        // Check if all subtasks are done or canceled
+        const allDone = task.subtasks.every((st) => st.status === "DONE" || st.status === "CANCELED");
+        if (allDone && pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+      } catch (error) {
+        console.error("Error polling analysis:", error);
+      }
+    };
+
+    const startPolling = (taskId) => {
+      pollInterval = setInterval(() => {
+        pollAnalysisStatus(taskId);
+      }, 1000);
     };
 
     onMounted(() => {
@@ -82,6 +125,7 @@ export default {
         latitude.value = parseFloat(lat).toFixed(6);
         longitude.value = parseFloat(lng).toFixed(6);
         isValid.value = true;
+        createAnalysis(parseFloat(lat), parseFloat(lng));
       } else {
         isValid.value = false;
       }
@@ -91,6 +135,7 @@ export default {
       latitude,
       longitude,
       isValid,
+      analysisTask,
       goBack,
     };
   },

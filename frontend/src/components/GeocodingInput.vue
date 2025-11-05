@@ -76,7 +76,7 @@ const hideSuggestionsIfSuggestionWasntClicked = (e) => {
   if (!e.target.closest(".suggestion-item")) {
     inputIsFocused.value = false;
   }
-}; 
+};
 
 const fetchSuggestions = async (query) => {
   if (!query.trim() || queryInProgress.value) return;

@@ -1,32 +1,44 @@
 package de.newsoupvi.environmentscore.controller;
 
+import de.newsoupvi.environmentscore.model.AnalysisTask;
+import de.newsoupvi.environmentscore.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class EnvironmentController {
 
-    @GetMapping("/score")
-    public ResponseEntity<Map<String, Object>> getEnvironmentScore() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("score", 85);
-        response.put("status", "Good");
-        response.put("lastUpdated", "2024-01-15T10:30:00Z");
-        return ResponseEntity.ok(response);
+    @Autowired
+    private TaskService taskService;
+
+    @PostMapping("/analysis")
+    public ResponseEntity<AnalysisTask> createAnalysis(@RequestBody Map<String, Double> coords, HttpSession session) {
+        double lat = coords.get("lat");
+        double lng = coords.get("lng");
+        String sessionId = session.getId();
+        AnalysisTask task = taskService.createAnalysisTask(lat, lng, sessionId);
+        return ResponseEntity.ok(task);
     }
 
-    @GetMapping("/locations")
-    public ResponseEntity<Map<String, Object>> getLocations() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("locations", new Object[]{
-            Map.of("id", 1, "name", "Central Park", "lat", 40.7829, "lng", -73.9654, "score", 92),
-            Map.of("id", 2, "name", "Times Square", "lat", 40.7580, "lng", -73.9855, "score", 78),
-            Map.of("id", 3, "name", "Brooklyn Bridge", "lat", 40.7061, "lng", -73.9969, "score", 88)
-        });
-        return ResponseEntity.ok(response);
+    @GetMapping("/analysis/{id}")
+    public ResponseEntity<AnalysisTask> getAnalysis(@PathVariable Long id, HttpSession session) {
+        AnalysisTask task = taskService.getTask(id);
+        if (task == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Verify session ownership
+        if (!session.getId().equals(task.getSessionId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
+        return ResponseEntity.ok(task);
     }
 }
