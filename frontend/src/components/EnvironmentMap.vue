@@ -39,18 +39,20 @@ onMounted(() => {
     map.on("click", (e) => {
       const { lat, lng } = e.latlng;
 
-      // Move existing marker to new position
-      marker.setLatLng([lat, lng]);
-
-      // Remove popup when user selects their own location
-      marker.unbindPopup();
-      isInitialMarker = false;
-
-      // Emit new coordinates
-      emit("coordinates-changed", lat, lng);
+      updateMarkerAndEmit(lat, lng);
     });
   }
 });
+
+const updateMarkerAndEmit = (lat, lng, message) => {
+  marker.setLatLng([lat, lng]);
+  if (message) {
+    marker.bindPopup(message).openPopup();
+  } else {
+    marker.unbindPopup();
+  }
+  emit("coordinates-changed", lat, lng);
+};
 
 // Watch for language changes and update popup if still showing initial marker
 watch(locale, () => {
