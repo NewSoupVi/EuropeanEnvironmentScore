@@ -10,6 +10,13 @@ import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import L from "leaflet";
 
+const props = defineProps({
+  externalLat: { type: Number, default: null },
+  externalLng: { type: Number, default: null },
+  externalMessage: { type: String, default: null },
+  updateTrigger: { type: Number, default: 0 },
+});
+
 const emit = defineEmits(["coordinates-changed"]);
 
 const { t, locale } = useI18n();
@@ -51,8 +58,19 @@ const updateMarkerAndEmit = (lat, lng, message) => {
   } else {
     marker.unbindPopup();
   }
+  isInitialMarker = false;
   emit("coordinates-changed", lat, lng);
 };
+
+// Watch for external coordinate changes via trigger
+watch(
+  () => props.updateTrigger,
+  () => {
+    if (marker && props.externalLat != null && props.externalLng != null) {
+      updateMarkerAndEmit(props.externalLat, props.externalLng, props.externalMessage);
+    }
+  },
+);
 
 // Watch for language changes and update popup if still showing initial marker
 watch(locale, () => {

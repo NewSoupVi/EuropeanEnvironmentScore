@@ -10,8 +10,14 @@
         <p>{{ $t("home.instruction") }}</p>
       </div>
       <div class="map-container">
-        <GeocodingInput />
-        <EnvironmentMap @coordinates-changed="updateCoordinates" />
+        <GeocodingInput @location-found="handleLocationFound" />
+        <EnvironmentMap
+          :external-lat="externalLocation.lat"
+          :external-lng="externalLocation.lng"
+          :external-message="externalLocation.message"
+          :update-trigger="updateTrigger"
+          @coordinates-changed="updateCoordinates"
+        />
         <button
           class="button-primary radius-bottom"
           :disabled="!coordinates.lat || !coordinates.lng"
@@ -41,9 +47,16 @@ export default {
   setup() {
     const router = useRouter();
     const coordinates = ref({ lat: 52.5208339, lng: 13.4089248 }); // Default to Berlin TV Tower
+    const externalLocation = ref({ lat: null, lng: null, message: null });
+    const updateTrigger = ref(0);
 
     const updateCoordinates = (lat, lng) => {
       coordinates.value = { lat, lng };
+    };
+
+    const handleLocationFound = (lat, lng, message) => {
+      externalLocation.value = { lat, lng, message };
+      updateTrigger.value++;
     };
 
     const navigateToAnalyze = () => {
@@ -60,7 +73,10 @@ export default {
 
     return {
       coordinates,
+      externalLocation,
+      updateTrigger,
       updateCoordinates,
+      handleLocationFound,
       navigateToAnalyze,
     };
   },

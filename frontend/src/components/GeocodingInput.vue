@@ -9,7 +9,8 @@
     <button
       id="locationSearchSubmit"
       class="submit-button button-primary"
-      @click="searchLocation()"
+      :disabled="isSearching"
+      @click="searchLocationDirect()"
     >
       {{ $t("geocode.search") }}
     </button>
@@ -17,10 +18,32 @@
 </template>
 
 <script setup>
-const locationInput = defineModel("locationInput", { type: String, default: "" });
+import { ref } from "vue";
 
-const searchLocation = () => {
-  console.log(locationInput.value);
+const emit = defineEmits(["location-found"]);
+
+const locationInput = defineModel("locationInput", { type: String, default: "" });
+const isSearching = ref(false);
+
+const searchLocationDirect = async () => {
+  if (!locationInput.value.trim() || isSearching.value) return;
+
+  isSearching.value = true;
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationInput.value)}&format=json`,
+    );
+    const data = await response.json();
+
+    if (data.length > 0) {
+      const result = data[0];
+      emit("location-found", parseFloat(result.lat), parseFloat(result.lon), result.display_name);
+    }
+  } catch (error) {
+    console.error("Geocoding error:", error);
+  } finally {
+    isSearching.value = false;
+  }
 };
 </script>
 
