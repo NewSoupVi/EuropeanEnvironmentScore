@@ -35,17 +35,17 @@ input {
   flex: 1;
   border-radius: 8px 0 0 0;
   border: 0;
-  background-color: rgb(230, 230, 230);
+  background-color: rgb(235, 235, 235);
   transition: all 0.2s ease;
 }
 
 input:hover {
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(245, 245, 245);
 }
 
 input:focus {
   outline: none;
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(250, 250, 250);
   transition: all 0.1s ease;
 }
 
