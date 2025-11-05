@@ -8,16 +8,17 @@ public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String type; // "A", "B", or "C"
-    
+
     @Enumerated(EnumType.STRING)
     private SubtaskStatus status;
-    
+
     private String result;
 
+    private Long createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "analysis_task_id")
     @JsonIgnore
     private AnalysisTask analysisTask;
 
@@ -29,6 +30,7 @@ public class Subtask {
         this.type = type;
         this.status = SubtaskStatus.QUEUED;
         this.result = null;
+        this.createdAt = System.currentTimeMillis();
     }
 
     public Long getId() {
@@ -61,6 +63,10 @@ public class Subtask {
 
     public void setAnalysisTask(AnalysisTask analysisTask) {
         this.analysisTask = analysisTask;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
     }
 }
 

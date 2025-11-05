@@ -1,6 +1,7 @@
 package de.newsoupvi.environmentscore.model;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +10,13 @@ public class AnalysisTask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private double latitude;
     private double longitude;
-    
+
     @OneToMany(mappedBy = "analysisTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Subtask> subtasks = new ArrayList<>();
-    
+
     private String sessionId;
 
     public AnalysisTask() {

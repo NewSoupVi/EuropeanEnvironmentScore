@@ -26,7 +26,7 @@ public class TaskExecutorService {
     @Scheduled(fixedDelay = 500) // Check every 500ms
     public void processQueuedTasks() {
         List<Subtask> queuedSubtasks = subtaskRepository.findByStatus(SubtaskStatus.QUEUED);
-        
+
         for (Subtask subtask : queuedSubtasks) {
             executorService.submit(() -> executeSubtask(subtask.getId()));
         }

@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface SubtaskRepository extends JpaRepository<Subtask, Long> {
     List<Subtask> findByStatus(SubtaskStatus status);
+
+    long countByStatusInAndCreatedAtLessThan(List<SubtaskStatus> statuses, Long createdAt);
 }
 

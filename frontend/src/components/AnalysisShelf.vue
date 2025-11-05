@@ -43,12 +43,18 @@
             class="in-progress"
           >
             <span class="spinner">⏳</span> Processing...
+            <span v-if="subtask.queuePosition > 0" class="queue-info">
+              ({{ subtask.queuePosition }} ahead)
+            </span>
           </div>
           <div
             v-else
             class="queued"
           >
             Waiting in queue...
+            <span v-if="subtask.queuePosition > 0" class="queue-info">
+              ({{ subtask.queuePosition }} tasks ahead)
+            </span>
           </div>
         </div>
       </div>
@@ -176,10 +182,17 @@ const formatStatus = (status) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .spinner {
   animation: spin 1s linear infinite;
+}
+
+.queue-info {
+  font-size: 0.875rem;
+  color: #a0aec0;
+  font-style: italic;
 }
 
 @keyframes pulse {

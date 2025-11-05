@@ -1,5 +1,7 @@
 package de.newsoupvi.environmentscore.service;
 
+import de.newsoupvi.environmentscore.dto.AnalysisTaskDTO;
+import de.newsoupvi.environmentscore.dto.SubtaskDTO;
 import de.newsoupvi.environmentscore.model.AnalysisTask;
 import de.newsoupvi.environmentscore.model.Subtask;
 import de.newsoupvi.environmentscore.model.SubtaskStatus;
@@ -8,6 +10,10 @@ import de.newsoupvi.environmentscore.repository.SubtaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -42,18 +48,43 @@ public class TaskService {
 
     @Transactional
     protected void cancelQueuedTasksForSession(String sessionId) {
-        analysisTaskRepository.findBySessionId(sessionId).forEach(task -> 
-            task.getSubtasks().stream()
-                .filter(subtask -> subtask.getStatus() == SubtaskStatus.QUEUED)
-                .forEach(subtask -> {
-                    subtask.setStatus(SubtaskStatus.CANCELED);
-                    subtaskRepository.save(subtask);
-                })
+        analysisTaskRepository.findBySessionId(sessionId).forEach(task ->
+                task.getSubtasks().stream()
+                        .filter(subtask -> subtask.getStatus() == SubtaskStatus.QUEUED)
+                        .forEach(subtask -> {
+                            subtask.setStatus(SubtaskStatus.CANCELED);
+                            subtaskRepository.save(subtask);
+                        })
         );
     }
 
     public AnalysisTask getTask(Long taskId) {
         return analysisTaskRepository.findById(taskId).orElse(null);
+    }
+
+    public AnalysisTaskDTO getTaskWithQueueInfo(Long taskId) {
+        AnalysisTask task = analysisTaskRepository.findById(taskId).orElse(null);
+        if (task == null) {
+            return null;
+        }
+
+        List<SubtaskDTO> subtaskDTOs = task.getSubtasks().stream()
+                .map(subtask -> {
+                    long queuePosition = calculateQueuePosition(subtask);
+                    return new SubtaskDTO(subtask, queuePosition);
+                })
+                .collect(Collectors.toList());
+
+        return new AnalysisTaskDTO(task, subtaskDTOs);
+    }
+
+    private long calculateQueuePosition(Subtask subtask) {
+        if (subtask.getStatus() == SubtaskStatus.DONE || subtask.getStatus() == SubtaskStatus.CANCELED) {
+            return 0;
+        }
+
+        List<SubtaskStatus> activeStatuses = Arrays.asList(SubtaskStatus.QUEUED, SubtaskStatus.IN_PROGRESS);
+        return subtaskRepository.countByStatusInAndCreatedAtLessThan(activeStatuses, subtask.getCreatedAt());
     }
 }
 
