@@ -35,9 +35,8 @@ public class EnvironmentController {
             return ResponseEntity.notFound().build();
         }
 
-        // Verify session ownership
         if (!session.getId().equals(task.getSessionId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.notFound().build();
         }
 
         AnalysisTaskDTO taskDTO = taskService.getTaskWithQueueInfo(id);
