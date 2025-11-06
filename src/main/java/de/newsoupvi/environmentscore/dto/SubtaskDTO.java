@@ -6,13 +6,15 @@ import de.newsoupvi.environmentscore.model.SubtaskStatus;
 public class SubtaskDTO {
     private final Long id;
     private final String type;
+    private final String description;
     private final SubtaskStatus status;
     private final String result;
     private final long queuePosition;
 
     public SubtaskDTO(Subtask subtask, long queuePosition) {
         this.id = subtask.getId();
-        this.type = subtask.getType();
+        this.type = subtask.getType().getId();
+        this.description = subtask.getType().getDescription();
         this.status = mapStatusForFrontend(subtask.getStatus());
         this.result = subtask.getResult();
         this.queuePosition = queuePosition;
@@ -28,6 +30,10 @@ public class SubtaskDTO {
 
     public String getType() {
         return type;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public SubtaskStatus getStatus() {

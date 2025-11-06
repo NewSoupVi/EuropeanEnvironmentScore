@@ -59,8 +59,9 @@ public class TaskExecutorService {
                 return;
             }
 
-            // Set result
-            subtask.setResult("Result " + subtask.getType());
+            // Set result - random score 0-5
+            int score = random.nextInt(6);
+            subtask.setResult(String.valueOf(score));
             subtask.setStatus(SubtaskStatus.DONE);
             subtaskRepository.save(subtask);
         } catch (InterruptedException e) {

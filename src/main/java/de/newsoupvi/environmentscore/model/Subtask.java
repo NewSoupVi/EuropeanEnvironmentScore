@@ -9,7 +9,8 @@ public class Subtask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // "A", "B", or "C"
+    @Enumerated(EnumType.STRING)
+    private SubtaskType type;
 
     @Enumerated(EnumType.STRING)
     private SubtaskStatus status;
@@ -26,7 +27,7 @@ public class Subtask {
         // JPA requires no-arg constructor
     }
 
-    public Subtask(String type) {
+    public Subtask(SubtaskType type) {
         this.type = type;
         this.status = SubtaskStatus.QUEUED;
         this.result = null;
@@ -37,7 +38,7 @@ public class Subtask {
         return id;
     }
 
-    public String getType() {
+    public SubtaskType getType() {
         return type;
     }
 

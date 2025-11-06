@@ -5,6 +5,7 @@ import de.newsoupvi.environmentscore.dto.SubtaskDTO;
 import de.newsoupvi.environmentscore.model.AnalysisTask;
 import de.newsoupvi.environmentscore.model.Subtask;
 import de.newsoupvi.environmentscore.model.SubtaskStatus;
+import de.newsoupvi.environmentscore.model.SubtaskType;
 import de.newsoupvi.environmentscore.repository.AnalysisTaskRepository;
 import de.newsoupvi.environmentscore.repository.SubtaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,7 @@ public class TaskService {
         AnalysisTask task = new AnalysisTask(latitude, longitude, sessionId);
 
         // Create 3 subtasks: A, B, C
-        String[] types = {"A", "B", "C"};
-        for (String type : types) {
+        for (SubtaskType type : SubtaskType.values()) {
             Subtask subtask = new Subtask(type);
             task.addSubtask(subtask);
         }
