@@ -11,12 +11,12 @@ public class SubtaskDTO {
     private final String result;
     private final long queuePosition;
 
-    public SubtaskDTO(Subtask subtask, long queuePosition) {
+    public SubtaskDTO(Subtask subtask, long queuePosition, boolean includeResults) {
         this.id = subtask.getId();
         this.type = subtask.getType().getId();
         this.description = subtask.getType().getDescription();
         this.status = mapStatusForFrontend(subtask.getStatus());
-        this.result = subtask.getResult();
+        this.result = includeResults ? subtask.getResult() : null;
         this.queuePosition = queuePosition;
     }
 

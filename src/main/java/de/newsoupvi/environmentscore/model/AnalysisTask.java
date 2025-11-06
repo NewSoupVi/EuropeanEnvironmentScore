@@ -19,6 +19,8 @@ public class AnalysisTask {
 
     private String sessionId;
 
+    private boolean resultsFetched = false;
+
     public AnalysisTask() {
         // JPA requires no-arg constructor
     }
@@ -53,6 +55,14 @@ public class AnalysisTask {
 
     public String getSessionId() {
         return sessionId;
+    }
+
+    public boolean isResultsFetched() {
+        return resultsFetched;
+    }
+
+    public void setResultsFetched(boolean resultsFetched) {
+        this.resultsFetched = resultsFetched;
     }
 }
 

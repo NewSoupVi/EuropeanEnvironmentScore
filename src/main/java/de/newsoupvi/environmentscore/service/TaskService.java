@@ -62,7 +62,7 @@ public class TaskService {
         return analysisTaskRepository.findById(taskId).orElse(null);
     }
 
-    public AnalysisTaskDTO getTaskWithQueueInfo(Long taskId) {
+    public AnalysisTaskDTO getTaskWithQueueInfo(Long taskId, boolean includeResults) {
         AnalysisTask task = analysisTaskRepository.findById(taskId).orElse(null);
         if (task == null) {
             return null;
@@ -71,11 +71,20 @@ public class TaskService {
         List<SubtaskDTO> subtaskDTOs = task.getSubtasks().stream()
                 .map(subtask -> {
                     long queuePosition = calculateQueuePosition(subtask);
-                    return new SubtaskDTO(subtask, queuePosition);
+                    return new SubtaskDTO(subtask, queuePosition, includeResults);
                 })
                 .collect(Collectors.toList());
 
         return new AnalysisTaskDTO(task, subtaskDTOs);
+    }
+
+    @Transactional
+    public void markResultsFetched(Long taskId) {
+        AnalysisTask task = analysisTaskRepository.findById(taskId).orElse(null);
+        if (task != null) {
+            task.setResultsFetched(true);
+            analysisTaskRepository.save(task);
+        }
     }
 
     private long calculateQueuePosition(Subtask subtask) {

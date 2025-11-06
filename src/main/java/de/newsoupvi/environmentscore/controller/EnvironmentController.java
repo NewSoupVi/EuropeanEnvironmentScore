@@ -31,7 +31,10 @@ public class EnvironmentController {
     }
 
     @GetMapping("/analysis/{id}")
-    public ResponseEntity<AnalysisTaskDTO> getAnalysis(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<AnalysisTaskDTO> getAnalysis(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean includeResults,
+            HttpSession session) {
         AnalysisTask task = taskService.getTask(id);
         if (task == null) {
             return ResponseEntity.notFound().build();
@@ -41,7 +44,18 @@ public class EnvironmentController {
             return ResponseEntity.notFound().build();
         }
 
-        AnalysisTaskDTO taskDTO = taskService.getTaskWithQueueInfo(id);
+        // Check if results already fetched
+        if (includeResults && task.isResultsFetched()) {
+            return ResponseEntity.status(403).build();
+        }
+
+        AnalysisTaskDTO taskDTO = taskService.getTaskWithQueueInfo(id, includeResults);
+
+        // Mark results as fetched if requested
+        if (includeResults) {
+            taskService.markResultsFetched(id);
+        }
+
         return ResponseEntity.ok(taskDTO);
     }
 }

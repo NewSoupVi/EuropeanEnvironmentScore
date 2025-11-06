@@ -102,7 +102,7 @@ export default {
 
     const pollAnalysisStatus = async (taskId) => {
       try {
-        const response = await fetch(`http://localhost:8080/api/analysis/${taskId}`, {
+        const response = await fetch(`http://localhost:8080/api/analysis/${taskId}?includeResults=false`, {
           credentials: "include",
         });
         const task = await response.json();
@@ -113,9 +113,23 @@ export default {
         if (allDone && pollInterval) {
           clearInterval(pollInterval);
           pollInterval = null;
+          // Fetch full results now that all are done
+          fetchFullResults(taskId);
         }
       } catch (error) {
         console.error("Error polling analysis:", error);
+      }
+    };
+
+    const fetchFullResults = async (taskId) => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/analysis/${taskId}?includeResults=true`, {
+          credentials: "include",
+        });
+        const task = await response.json();
+        analysisTask.value = task;
+      } catch (error) {
+        console.error("Error fetching results:", error);
       }
     };
 
@@ -136,6 +150,12 @@ export default {
         createAnalysis(parseFloat(lat), parseFloat(lng));
       } else {
         isValid.value = false;
+      }
+    });
+
+    onBeforeUnmount(() => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
       }
     });
 
