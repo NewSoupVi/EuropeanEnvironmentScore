@@ -1,66 +1,81 @@
 <template>
   <div class="analysis-shelf">
-    <div class="header-section">
-      <h2>Analysis Tasks</h2>
-      <div
-        v-if="analysisTask && minQueuePosition > 0"
-        class="overall-queue-info"
-      >
-        <span class="queue-badge">{{ minQueuePosition }} tasks ahead in queue</span>
-      </div>
-    </div>
-    <div
-      v-if="!analysisTask"
-      class="loading"
-    >
-      <p>Initializing analysis...</p>
-    </div>
-    <div
-      v-else
-      class="subtasks-container"
+    <Transition
+      name="fade"
+      mode="out-in"
     >
       <div
-        v-for="subtask in analysisTask.subtasks"
-        :key="subtask.id"
-        class="subtask-card"
+        v-if="!analysisTask || !hasStarted"
+        key="loading"
+        class="loading"
       >
-        <div class="subtask-header">
-          <h3>Task {{ subtask.type }}</h3>
-          <span
-            class="status-badge"
-            :class="subtask.status.toLowerCase()"
-          >
-            {{ formatStatus(subtask.status) }}
-          </span>
+        <div
+          v-if="initError"
+          class="error"
+        >
+          ❌ Failed to initialize analysis
         </div>
-        <div class="subtask-body">
+        <div
+          v-else
+          class="spinner-container"
+        >
+          <span class="spinner spinner-large">⏳</span>
           <div
-            v-if="subtask.status === 'DONE' && subtask.result"
-            class="result"
+            v-if="minQueuePosition > 0"
+            class="overall-queue-info"
           >
-            <strong>Result:</strong> {{ subtask.result }}
-          </div>
-          <div
-            v-else-if="subtask.status === 'CANCELED'"
-            class="canceled"
-          >
-            ❌ Canceled
-          </div>
-          <div
-            v-else-if="subtask.status === 'IN_PROGRESS'"
-            class="in-progress"
-          >
-            <span class="spinner">⏳</span> Processing...
-          </div>
-          <div
-            v-else
-            class="queued"
-          >
-            Waiting in queue...
+            <span class="queue-badge">{{ minQueuePosition }} tasks ahead in queue</span>
           </div>
         </div>
       </div>
-    </div>
+      <div
+        v-else
+        key="subtasks"
+        class="subtasks-container"
+      >
+        <div
+          v-for="subtask in analysisTask.subtasks"
+          :key="subtask.id"
+          class="subtask-card"
+        >
+          <div class="subtask-header">
+            <h3>Task {{ subtask.type }}</h3>
+            <span
+              class="status-badge"
+              :class="subtask.status.toLowerCase()"
+            >
+              {{ formatStatus(subtask.status) }}
+            </span>
+          </div>
+          <div class="subtask-body">
+            <div
+              v-if="subtask.status === 'DONE' && subtask.result"
+              class="result"
+            >
+              <strong>Result:</strong> {{ subtask.result }}
+            </div>
+            <div
+              v-else-if="subtask.status === 'CANCELED'"
+              class="canceled"
+            >
+              ❌ Canceled
+            </div>
+            <div
+              v-else-if="subtask.status === 'IN_PROGRESS'"
+              class="in-progress"
+            >
+              <span class="spinner">⏳</span> Processing...
+            </div>
+            <div
+              v-else
+              class="queued"
+            >
+              Waiting in queue...
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -71,6 +86,10 @@ const props = defineProps({
   analysisTask: {
     type: Object,
     default: null,
+  },
+  initError: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -98,11 +117,20 @@ const minQueuePosition = computed(() => {
 
   return positions.length > 0 ? Math.min(...positions) : 0;
 });
+
+const hasStarted = computed(() => {
+  if (!props.analysisTask || !props.analysisTask.subtasks) {
+    return false;
+  }
+
+  return props.analysisTask.subtasks.some((st) => st.status !== "QUEUED");
+});
 </script>
 
 <style scoped>
 .analysis-shelf {
   padding: 2rem;
+  height: 100%;
   color: #e2e8f0;
 }
 
@@ -114,6 +142,7 @@ const minQueuePosition = computed(() => {
   color: #68d391;
   margin-bottom: 0.5rem;
   font-size: 1.8rem;
+  height: 100%;
 }
 
 .overall-queue-info {
@@ -135,6 +164,26 @@ const minQueuePosition = computed(() => {
   text-align: center;
   padding: 2rem;
   color: #a0aec0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner-large {
+  font-size: 3rem;
+}
+
+.error {
+  color: #f56565;
+  font-size: 1.2rem;
 }
 
 .subtasks-container {
@@ -239,5 +288,15 @@ const minQueuePosition = computed(() => {
   to {
     transform: rotate(360deg);
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

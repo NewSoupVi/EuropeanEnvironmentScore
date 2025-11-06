@@ -25,7 +25,10 @@
           />
         </div>
         <div class="right-or-bottom-container">
-          <AnalysisShelf :analysis-task="analysisTask" />
+          <AnalysisShelf
+            :analysis-task="analysisTask"
+            :init-error="initError"
+          />
         </div>
       </div>
 
@@ -70,6 +73,7 @@ export default {
     const longitude = ref(null);
     const isValid = ref(false);
     const analysisTask = ref(null);
+    const initError = ref(false);
     let pollInterval = null;
 
     const goBack = () => {
@@ -84,11 +88,15 @@ export default {
           credentials: "include",
           body: JSON.stringify({ lat, lng }),
         });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         const task = await response.json();
         analysisTask.value = task;
         startPolling(task.id);
       } catch (error) {
         console.error("Error creating analysis:", error);
+        initError.value = true;
       }
     };
 
@@ -136,6 +144,7 @@ export default {
       longitude,
       isValid,
       analysisTask,
+      initError,
       goBack,
     };
   },
