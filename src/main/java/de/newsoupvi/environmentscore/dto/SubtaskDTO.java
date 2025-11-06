@@ -13,9 +13,13 @@ public class SubtaskDTO {
     public SubtaskDTO(Subtask subtask, long queuePosition) {
         this.id = subtask.getId();
         this.type = subtask.getType();
-        this.status = subtask.getStatus();
+        this.status = mapStatusForFrontend(subtask.getStatus());
         this.result = subtask.getResult();
         this.queuePosition = queuePosition;
+    }
+
+    private static SubtaskStatus mapStatusForFrontend(SubtaskStatus status) {
+        return status == SubtaskStatus.QUEUED_SUBMITTED ? SubtaskStatus.QUEUED : status;
     }
 
     public Long getId() {
