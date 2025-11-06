@@ -5,7 +5,7 @@
       mode="out-in"
     >
       <div
-        v-if="!analysisTask || !hasStarted"
+        v-if="!analysisTask || !allDone"
         key="loading"
         class="loading"
       >
@@ -21,42 +21,39 @@
         >
           <span class="spinner spinner-large">⏳</span>
           <div
-            v-if="minQueuePosition > 0"
+            v-if="!hasStarted && minQueuePosition > 0"
             class="overall-queue-info"
           >
             <span class="queue-badge">{{ minQueuePosition }} tasks ahead in queue</span>
+          </div>
+          <div
+            v-else
+            class="progress-info"
+          >
+            <span class="progress-badge">{{ completedCount }}/{{ totalCount }} complete</span>
           </div>
         </div>
       </div>
       <div
         v-else
-        key="subtasks"
-        class="subtasks-container"
+        key="results"
+        class="results-container"
       >
         <div
-          v-for="subtask in analysisTask.subtasks"
+          v-for="(subtask, index) in analysisTask.subtasks"
           :key="subtask.id"
-          class="subtask-box"
+          class="result-card"
+          :class="{
+            highlighting: index === highlightedIndex,
+            revealed: index < revealedCount,
+          }"
         >
-          <Transition
-            name="fade"
-            mode="out-in"
-          >
-            <div
-              v-if="subtask.status === 'DONE' && subtask.result"
-              key="result"
-              class="result-content"
-            >
-              {{ subtask.result }}
-            </div>
-            <div
-              v-else
-              key="spinner"
-              class="spinner-content"
-            >
-              <span class="spinner">⏳</span>
-            </div>
-          </Transition>
+          <div class="result-title">
+            {{ subtask.description }}
+          </div>
+          <div class="result-score">
+            {{ subtask.result }}
+          </div>
         </div>
       </div>
     </Transition>
@@ -64,7 +61,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps({
   analysisTask: {
@@ -76,6 +73,9 @@ const props = defineProps({
     default: false,
   },
 });
+
+const revealedCount = ref(0);
+const highlightedIndex = ref(-1);
 
 const minQueuePosition = computed(() => {
   if (!props.analysisTask || !props.analysisTask.subtasks) {
@@ -94,6 +94,48 @@ const hasStarted = computed(() => {
 
   return props.analysisTask.subtasks.some((st) => st.status !== "QUEUED");
 });
+
+const allDone = computed(() => {
+  if (!props.analysisTask || !props.analysisTask.subtasks) {
+    return false;
+  }
+
+  return props.analysisTask.subtasks.every((st) => st.status === "DONE");
+});
+
+const completedCount = computed(() => {
+  if (!props.analysisTask || !props.analysisTask.subtasks) {
+    return 0;
+  }
+
+  return props.analysisTask.subtasks.filter((st) => st.status === "DONE").length;
+});
+
+const totalCount = computed(() => {
+  if (!props.analysisTask || !props.analysisTask.subtasks) {
+    return 0;
+  }
+
+  return props.analysisTask.subtasks.length;
+});
+
+// Sequential reveal when all done
+watch(allDone, (isDone) => {
+  if (isDone) {
+    revealedCount.value = 0;
+    highlightedIndex.value = -1;
+    const total = props.analysisTask.subtasks.length;
+    const interval = setInterval(() => {
+      if (revealedCount.value < total) {
+        revealedCount.value++;
+        highlightedIndex.value = revealedCount.value - 1;
+      } else {
+        clearInterval(interval);
+        highlightedIndex.value = -1;
+      }
+    }, 1500); // 800ms fade + 700ms hold
+  }
+});
 </script>
 
 <style scoped>
@@ -110,7 +152,8 @@ const hasStarted = computed(() => {
   align-items: center;
 }
 
-.queue-badge {
+.queue-badge,
+.progress-badge {
   background-color: #3182ce;
   color: #e2e8f0;
   padding: 0.5rem 1rem;
@@ -118,6 +161,11 @@ const hasStarted = computed(() => {
   font-size: 0.9rem;
   font-weight: 600;
   display: inline-block;
+}
+
+.progress-info {
+  display: flex;
+  align-items: center;
 }
 
 .loading {
@@ -146,34 +194,50 @@ const hasStarted = computed(() => {
   font-size: 1.2rem;
 }
 
-.subtasks-container {
+.results-container {
   display: flex;
   flex-direction: column;
   flex: 1;
   gap: 1rem;
 }
 
-.subtask-box {
+.result-card {
   flex: 1;
   min-height: 80px;
   background-color: #1a202c;
-  border: 1px solid #4a5568;
+  border: 2px solid #4a5568;
   border-radius: 8px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  opacity: 0;
+  transition:
+    opacity 0.8s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
 }
 
-.spinner-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.result-card.revealed {
+  opacity: 1;
 }
 
-.result-content {
-  color: #e2e8f0;
-  text-align: center;
+.result-card.highlighting {
+  border-color: #68d391;
+  transform: scale(1.02);
+}
+
+.result-title {
+  color: #a0aec0;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-score {
+  color: #68d391;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .spinner {
