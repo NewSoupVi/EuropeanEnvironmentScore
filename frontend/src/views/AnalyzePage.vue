@@ -243,6 +243,7 @@ main {
 .left-or-top-container,
 .right-or-bottom-container {
   flex: 1;
+  position: relative;
 }
 
 .coordinates-display h2 {

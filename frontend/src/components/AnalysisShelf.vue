@@ -37,22 +37,33 @@
       <div
         v-else
         key="results"
-        class="results-container"
+        class="results-container-wrapper"
       >
-        <div
-          v-for="(subtask, index) in analysisTask.subtasks"
-          :key="subtask.id"
-          class="result-card"
-          :class="{
-            highlighting: index === highlightedIndex,
-            revealed: index < revealedCount,
-          }"
-        >
-          <div class="result-title">
-            {{ subtask.description }}
-          </div>
-          <div class="result-score">
-            {{ subtask.result }}
+        <div class="results-container">
+          <div
+            v-for="(subtask, index) in analysisTask.subtasks"
+            :key="subtask.id"
+            :ref="
+              (el) => {
+                if (el) cardContainerRefs[index] = el;
+              }
+            "
+            class="result-card-container"
+          >
+            <div
+              class="result-card"
+              :class="{
+                highlighting: index === highlightedIndex,
+                revealed: index < revealedCount,
+              }"
+            >
+              <div class="result-title">
+                {{ subtask.description }}
+              </div>
+              <div class="result-score">
+                {{ subtask.result }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -76,6 +87,7 @@ const props = defineProps({
 
 const revealedCount = ref(0);
 const highlightedIndex = ref(-1);
+const cardContainerRefs = ref([]);
 
 const minQueuePosition = computed(() => {
   if (!props.analysisTask || !props.analysisTask.subtasks) {
@@ -124,6 +136,7 @@ watch(allDone, (isDone) => {
   if (isDone) {
     revealedCount.value = 0;
     highlightedIndex.value = -1;
+    cardContainerRefs.value = [];
     const total = props.analysisTask.subtasks.length;
     const interval = setInterval(() => {
       if (revealedCount.value < total) {
@@ -136,12 +149,24 @@ watch(allDone, (isDone) => {
     }, 1500); // 800ms fade + 700ms hold
   }
 });
+
+// Scroll to newly revealed card
+watch(revealedCount, (newCount) => {
+  if (newCount > 0 && cardContainerRefs.value[newCount - 1]) {
+    setTimeout(() => {
+      cardContainerRefs.value[newCount - 1].scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }, 100); // Small delay to ensure fade animation starts
+  }
+});
 </script>
 
 <style scoped>
 .analysis-shelf {
-  padding: 2rem;
   height: 100%;
+  position: relative;
   color: #e2e8f0;
   display: flex;
   flex-direction: column;
@@ -194,16 +219,57 @@ watch(allDone, (isDone) => {
   font-size: 1.2rem;
 }
 
+.results-container-wrapper {
+  padding: 0 2rem 0 2rem;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4a5568 #1a202c;
+}
+
+.results-container-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.results-container-wrapper::-webkit-scrollbar-track {
+  background: #1a202c;
+}
+
+.results-container-wrapper::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 4px;
+}
+
+.results-container-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #68d391;
+}
+
 .results-container {
   display: flex;
   flex-direction: column;
+
+  height: 100%;
+}
+
+.result-card-container {
   flex: 1;
-  gap: 1rem;
+
+  padding: 0.5rem 0 0.5rem 0;
+}
+
+.result-card-container:last-child {
+  padding-bottom: 1rem;
+}
+
+.result-card-container:first-child {
+  padding-top: 1rem;
 }
 
 .result-card {
-  flex: 1;
   min-height: 80px;
+  height: 100%;
   background-color: #1a202c;
   border: 2px solid #4a5568;
   border-radius: 8px;
